@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body,html {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(70, 65, 65);
+}
+* {
+    box-sizing: border-box;
+}
+
+#container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#clock {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15vw;
+    background-image: linear-gradient(180deg,
+        rgba(99,253,136,1) 0%,
+        rgba(51,197,142,1) 50%,
+        rgba(39,97,116,1) 100%);
+
+
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+.button {
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+.setAlarm {
+    background-color: rgb(20, 117, 155);
+}
+
+.clearAlarm {
+    background-color: rgb(153, 43, 62);
+}
+    </style>
+    <title>Clock</title>
+</head>
+<body>
+    <section id="container">
+        <div id="clock"></div>
+        <input onchange="setAlarmTime(this.value)" name="alarmTime" type="datetime-local">
+        <div class="controls">
+            <button onclick="setAlarm()" class="setAlarm">Set alarm</button>
+            <button onclick="clearAlarm()" class="clearAlarm">Clear alarm</button>
+        </div>
+    </section>
+    <script >
+    var display = document.getElementById('clock');
+        var audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+        audio.loop = true;
+
+
+        function updateTime() {
+            var date = new Date();
+
+            var hour = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+     display.innerText=hour+" : "+minutes+" : "+seconds
+        }
+
+        function formatTime(time) {
+            if ( time < 10 ) {
+                return '0' + time;
+            }
+            return time;
+        }
+
+        function setAlarmTime(value) {
+            alarmTime = value;
+        }
+
+        function setAlarm() {
+            if(alarmTime) {
+                const current = new Date();
+                const timeToAlarm = new Date(alarmTime);
+
+                if (timeToAlarm > current) 
+                {
+                    const timeout = timeToAlarm.getTime() - current.getTime();
+                    alarmTimeout = setTimeout( function() {audio.play()}, timeout);
+                    alert('Alarm set');
+                }
+            }
+        }
+
+        function clearAlarm() {
+            audio.pause();
+            if (alarmTimeout) 
+            {
+                clearTimeout(alarmTimeout);
+                alert('Alarm cleared');
+            }
+        }
+
+        setInterval(updateTime, 1000);
+        </script>
+</body>
+</html>
